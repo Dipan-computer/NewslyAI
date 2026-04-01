@@ -23,7 +23,7 @@ function Explore() {
       setSearched(true);
 
       const response = await fetch(
-        `http://localhost:5000/news?q=${encodeURIComponent(query)}`
+        `http://newslyai.onrender.com/news?q=${encodeURIComponent(query)}`
       );
 
       if (!response.ok) {
