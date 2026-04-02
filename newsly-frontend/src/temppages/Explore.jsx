@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import BottomNav from "../components/BottomNav";
 import { addNotification } from "../Utils/NotificationHelper";
+import { API_BASE_URL } from "../config";
 
 function Explore() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function Explore() {
       setSearched(true);
 
       const response = await fetch(
-        `http:/newslyai.onrender.com/news?q=${encodeURIComponent(query)}`
+        `${API_BASE_URL}/news?q=${encodeURIComponent(query)}`
       );
 
       if (!response.ok) {
@@ -34,7 +35,7 @@ function Explore() {
 
       const formattedNews = (Array.isArray(data) ? data : []).map(
         (article, index) => ({
-          id: index + 1,
+          id: article.url || index + 1,
           category: article.source?.name || "News",
           title: article.title || "No title available",
           source: article.author || article.source?.name || "Unknown Source",
@@ -59,6 +60,7 @@ function Explore() {
     } catch (err) {
       console.error("Explore search error:", err);
       setError("Unable to fetch live search results");
+      setNews([]);
     } finally {
       setLoading(false);
     }
@@ -221,7 +223,9 @@ function Explore() {
                   <span className="rounded-full bg-blue-500/15 px-2 py-0.5 text-[10px] text-blue-300">
                     {item.category}
                   </span>
-                  <span className="text-[10px] text-slate-400">{item.time}</span>
+                  <span className="text-[10px] text-slate-400">
+                    {item.time}
+                  </span>
                 </div>
 
                 <h3 className="text-sm font-semibold leading-snug">
